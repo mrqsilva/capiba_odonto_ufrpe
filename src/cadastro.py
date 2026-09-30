@@ -20,6 +20,8 @@ def cadastrar_paciente(lista_pacientes: list) -> list[dict]:
 
     ficha_paciente["anamnese"] = cadastrar_anamnese_inicial()
 
+    ficha_paciente["assinatura_tcle"] = coletar_assinatura_tcle()
+
     lista_pacientes.append(ficha_paciente)
 
     return lista_pacientes
@@ -51,6 +53,19 @@ def cadastrar_anamnese_inicial() -> dict:
 
     return anamnese
 
+def coletar_assinatura_tcle(ficha_paciente: dict | None = None) -> bool:
+    print("\n" + "="*42)
+    print("TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO (TCLE)")
+    print("="*42)
+
+    resposta = input("O paciente realizou a assinatura do termo de consentimento (TCLE) (s/n)? ").strip().lower()
+    assinado = resposta in ("s", "sim")
+
+    if ficha_paciente is not None:
+        ficha_paciente["assinatura_tcle"] = assinado
+
+    return assinado
+
 def listar_pacientes(lista_pacientes: list) -> None:
     if not lista_pacientes:
         print("\nNenhum paciente cadastrado.")
@@ -75,3 +90,6 @@ def listar_pacientes(lista_pacientes: list) -> None:
             print(f"  - Medicamentos contínuos: {anamnese.get('medicamentos_continuos', 'Não informado')}")
         else:
             print("Anamnese: Não informada")
+
+        status_tcle = "Sim" if paciente.get("assinatura_tcle") else "Não"
+        print(f"Assinatura do TCLE: {status_tcle} ({paciente.get('assinatura_tcle')})")
