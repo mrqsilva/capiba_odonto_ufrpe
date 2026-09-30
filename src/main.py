@@ -1,7 +1,7 @@
-from cadastro import cadastrar_paciente
+from cadastro import cadastrar_paciente, listar_pacientes
 
 def menu_principal() -> int:
-    print("=======================")
+    print("\n=======================")
     print("===* CAPIBA ODONTO *===")
     print("=======================")
 
@@ -12,16 +12,32 @@ def menu_principal() -> int:
 
     opcao = input("Digite o número da opção correspondente: ")
 
-    return int(opcao)
+    try:
+        return int(opcao)
+    except ValueError:
+        return -1
 
 if __name__ == "__main__":
-    escolher_opcao = menu_principal()
-
     lista_pacientes = []
 
-    if escolher_opcao == 1:
-        cadastro = cadastrar_paciente(lista_pacientes)
+    while True:
+        try:
+            escolher_opcao = menu_principal()
+        except (EOFError, KeyboardInterrupt):
+            print("\nSaindo do sistema...")
+            break
 
-    print(lista_pacientes)
-
+        if escolher_opcao == 1:
+            try:
+                cadastrar_paciente(lista_pacientes)
+            except (EOFError, KeyboardInterrupt):
+                print("\nOperação cancelada.")
+                break
+        elif escolher_opcao == 2:
+            listar_pacientes(lista_pacientes)
+        elif escolher_opcao == 0:
+            print("\nSaindo do sistema...")
+            break
+        else:
+            print("\nOpção inválida! Escolha uma opção válida.")
     

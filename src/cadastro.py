@@ -18,31 +18,60 @@ def cadastrar_paciente(lista_pacientes: list) -> list[dict]:
     contato_emergencia = input("Contato de emergência (nome/grau/contato): ")
     ficha_paciente["contato_emergencia"] = contato_emergencia
 
+    ficha_paciente["anamnese"] = cadastrar_anamnese_inicial()
+
     lista_pacientes.append(ficha_paciente)
 
     return lista_pacientes
 
-def cadastrar_anamnese_inicial():
-    print("Formulário de saúde")
-    alergias = input("Possui alguma alergia medicamentosa (s/n)? ")
+def cadastrar_anamnese_inicial() -> dict:
+    anamnese = {}
+
+    print("\n" + "="*42)
+    print("FORMULÁRIO DE SAÚDE (ANAMNESE INICIAL)")
+    print("="*42)
+
+    alergias = input("Possui alguma alergia medicamentosa (s/n)? ").strip().lower()
     if alergias == "s":
-        input("Informe o nome do fármaco: ") 
+        anamnese["alergia_medicamentosa"] = input("Informe o nome do fármaco: ").strip()
     else:
-        pass
+        anamnese["alergia_medicamentosa"] = "Não possui"
 
-    cirurgias_previas = input("Já realizou alguma cirurgia (s/n)? ")
+    cirurgias_previas = input("Já realizou alguma cirurgia (s/n)? ").strip().lower()
     if cirurgias_previas == "s":
-        nome_cirurgia = input("Informe o nome da cirurgia: ")
+        anamnese["cirurgias_previas"] = input("Informe o nome da cirurgia: ").strip()
     else: 
-        pass
+        anamnese["cirurgias_previas"] = "Não possui"
 
-    medicamentos_continuos = input("Faz uso de alguma medicação contínua (s/n)? ")
-
+    medicamentos_continuos = input("Faz uso de alguma medicação contínua (s/n)? ").strip().lower()
     if medicamentos_continuos == "s":
-        nome_medicamento_continuo = input("Informe o nome do medicamento: ")
+        anamnese["medicamentos_continuos"] = input("Informe o nome do medicamento: ").strip()
     else:
-        pass
+        anamnese["medicamentos_continuos"] = "Não possui"
 
-def listar_pacientes(lista_pacientes):
-    for paciente in lista_pacientes: 
-        ...
+    return anamnese
+
+def listar_pacientes(lista_pacientes: list) -> None:
+    if not lista_pacientes:
+        print("\nNenhum paciente cadastrado.")
+        return
+
+    print("\n" + "="*42)
+    print("LISTA DE PACIENTES")
+    print("="*42)
+    for indice, paciente in enumerate(lista_pacientes, start=1):
+        print(f"\n--- Paciente #{indice} ---")
+        print(f"Nome: {paciente.get('nome_paciente')}")
+        print(f"CPF: {paciente.get('cpf')}")
+        print(f"Data de Nascimento: {paciente.get('data_nascimento')}")
+        print(f"Contato: {paciente.get('contato_principal')}")
+        print(f"Contato de Emergência: {paciente.get('contato_emergencia')}")
+
+        anamnese = paciente.get("anamnese", {})
+        if anamnese:
+            print("Anamnese:")
+            print(f"  - Alergia medicamentosa: {anamnese.get('alergia_medicamentosa', 'Não informado')}")
+            print(f"  - Cirurgias prévias: {anamnese.get('cirurgias_previas', 'Não informado')}")
+            print(f"  - Medicamentos contínuos: {anamnese.get('medicamentos_continuos', 'Não informado')}")
+        else:
+            print("Anamnese: Não informada")
